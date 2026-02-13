@@ -10,23 +10,27 @@ body {
 }
 
 .header { 
-    display: flex; justify-content: space-between; padding: 15px; 
-    background: #000; font-size: 14px; border-bottom: 2px solid #0f0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 10px 15px; background: #000; border-bottom: 2px solid #0f0; height: 60px;
 }
 
-#road { 
-    flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: #0a0a0a; 
+.stat-box { font-size: 14px; color: #0f0; min-width: 90px; }
+.stat-box.right { text-align: right; }
+.stat-box.left { text-align: left; }
+
+.score-center { 
+    font-size: 28px; font-weight: bold; color: #fff; 
+    text-shadow: 0 0 15px #0f0; flex-grow: 1; text-align: center; 
 }
 
-.controls-area {
-    display: flex; height: 120px; background: #000; border-top: 2px solid #0f0;
-}
+#road { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: #0a0a0a; }
 
-.control-btn {
-    flex: 1; background: #000; color: #0f0; border: 1px solid #0f0;
-    font-size: 40px; outline: none; transition: 0.1s;
-}
+.controls-area { display: flex; height: 120px; background: #000; border-top: 2px solid #0f0; }
 
+.control-btn { 
+    flex: 1; background: #000; color: #0f0; border: 1px solid #0f0; 
+    font-size: 40px; outline: none; 
+}
 .control-btn:active { background: #0f0; color: #000; }
 
 #player-car { 
@@ -36,19 +40,11 @@ body {
 }
 
 .limo { width: 100%; height: 100%; background: #000; border: 2px solid #0f0; border-radius: 4px; box-shadow: 0 0 10px #0f0; }
-
-.escort { 
-    position: absolute; top: 12px; font-size: 16px; width: 28px; height: 48px; 
-    background: #000; border: 1px solid #0f0; text-align: center; line-height: 48px; 
-}
-
+.escort { position: absolute; top: 12px; font-size: 16px; width: 28px; height: 48px; background: #000; border: 1px solid #0f0; text-align: center; line-height: 48px; }
 #escort-left { left: -35px; }
 #escort-right { right: -35px; }
 
-.enemy { 
-    position: absolute; width: 35px; height: 60px; background: #f00; 
-    border: 1px solid #fff; border-radius: 4px; box-shadow: 0 0 15px #f00; z-index: 55; 
-}
+.enemy { position: absolute; width: 35px; height: 60px; background: #f00; border: 1px solid #fff; border-radius: 4px; box-shadow: 0 0 15px #f00; z-index: 55; }
 
 #main-menu { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
@@ -57,15 +53,6 @@ body {
 }
 
 .shop { display: flex; flex-direction: column; gap: 10px; width: 80%; margin: 20px 0; }
-
-.shop button { 
-    background: #000; color: #0f0; border: 1px solid #0f0; 
-    padding: 12px; font-size: 12px; cursor: pointer;
-}
-
-#start-btn { 
-    background: #0f0; color: #000; padding: 15px 40px; 
-    font-weight: bold; font-size: 20px; border: none; cursor: pointer; 
-}
-
+.shop button { background: #000; color: #0f0; border: 1px solid #0f0; padding: 12px; font-size: 12px; cursor: pointer; }
+#start-btn { background: #0f0; color: #000; padding: 15px 40px; font-weight: bold; font-size: 20px; border: none; cursor: pointer; }
 .hidden { display: none !important; }
