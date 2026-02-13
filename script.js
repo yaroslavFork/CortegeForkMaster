@@ -1,58 +1,113 @@
-body { 
-    background: #000; color: #0f0; font-family: 'Courier New', monospace; 
-    margin: 0; padding: 0; overflow: hidden; touch-action: none;
+let game = {
+    active: false,
+    cash: parseInt(localStorage.getItem('fcm_cash')) || 0,
+    record: parseInt(localStorage.getItem('fcm_record')) || 0,
+    escort: parseInt(localStorage.getItem('fcm_escort')) || 0,
+    speed: 5, pos: 50, dist: 0
+};
+
+window.onload = () => updateUI();
+
+function updateUI() {
+    document.getElementById('cash').innerText = Math.floor(game.cash);
+    document.getElementById('menu-cash').innerText = Math.floor(game.cash);
+    document.getElementById('highscore').innerText = game.record;
+    document.getElementById('menu-record').innerText = game.record;
+
+    if (game.escort >= 1) {
+        document.getElementById('escort-left').classList.remove('hidden');
+        document.getElementById('btn-esc-1').innerText = "OWNED";
+        document.getElementById('btn-esc-1').disabled = true;
+    }
+    if (game.escort >= 2) {
+        document.getElementById('escort-right').classList.remove('hidden');
+        document.getElementById('btn-esc-2').innerText = "OWNED";
+        document.getElementById('btn-esc-2').disabled = true;
+    }
 }
 
-#game-container { 
-    width: 100vw; height: 100vh; max-width: 480px; 
-    margin: auto; position: relative; border-left: 2px solid #0f0; 
-    border-right: 2px solid #0f0; background: #050505; display: flex; flex-direction: column;
+function startGame() {
+    game.active = true;
+    game.dist = 0;
+    game.speed = 5;
+    game.pos = 50;
+    document.getElementById('main-menu').classList.add('hidden');
+    document.querySelectorAll('.enemy').forEach(e => e.remove());
+    updatePos();
+    gameTick();
+    spawnLoop();
 }
 
-.header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 10px 15px; background: #000; border-bottom: 2px solid #0f0; height: 60px;
+function gameTick() {
+    if (!game.active) return;
+    
+    game.dist++;
+    game.cash += (1 + game.escort * 2);
+    
+    document.getElementById('cash').innerText = Math.floor(game.cash);
+    document.getElementById('current-dist').innerText = game.dist;
+    
+    if (game.dist > game.record) {
+        game.record = game.dist;
+        document.getElementById('highscore').innerText = game.record;
+    }
+
+    if (game.dist % 250 === 0) game.speed += 0.4;
+    requestAnimationFrame(gameTick);
 }
 
-.stat-box { font-size: 14px; color: #0f0; min-width: 90px; }
-.stat-box.right { text-align: right; }
-.stat-box.left { text-align: left; }
+function spawnLoop() {
+    if (!game.active) return;
+    let enemy = document.createElement('div');
+    enemy.className = "enemy";
+    enemy.style.left = (Math.random() * 65 + 15) + "%";
+    enemy.style.top = "-80px";
+    document.getElementById('road').appendChild(enemy);
 
-.score-center { 
-    font-size: 28px; font-weight: bold; color: #fff; 
-    text-shadow: 0 0 15px #0f0; flex-grow: 1; text-align: center; 
+    let move = setInterval(() => {
+        if (!game.active) { clearInterval(move); enemy.remove(); return; }
+        let y = parseInt(enemy.style.top) + game.speed;
+        enemy.style.top = y + "px";
+
+        let limo = document.getElementById('player-car').getBoundingClientRect();
+        let en = enemy.getBoundingClientRect();
+
+        if (en.bottom > limo.top && en.top < limo.bottom && en.right > limo.left && en.left < limo.right) {
+            clearInterval(move);
+            endGame();
+        }
+        if (y > window.innerHeight) { clearInterval(move); enemy.remove(); }
+    }, 20);
+    setTimeout(spawnLoop, Math.max(350, 1700 - (game.speed * 90)));
 }
 
-#road { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: #0a0a0a; }
-
-.controls-area { display: flex; height: 120px; background: #000; border-top: 2px solid #0f0; }
-
-.control-btn { 
-    flex: 1; background: #000; color: #0f0; border: 1px solid #0f0; 
-    font-size: 40px; outline: none; 
-}
-.control-btn:active { background: #0f0; color: #000; }
-
-#player-car { 
-    position: absolute; bottom: 30px; left: 50%; 
-    transform: translateX(-50%); width: 35px; height: 75px; 
-    transition: left 0.12s ease-out; z-index: 60; 
+function endGame() {
+    game.active = false;
+    localStorage.setItem('fcm_cash', Math.floor(game.cash));
+    localStorage.setItem('fcm_record', game.record);
+    document.getElementById('menu-title').innerText = "MISSION FAILED";
+    document.getElementById('main-menu').classList.remove('hidden');
+    updateUI();
 }
 
-.limo { width: 100%; height: 100%; background: #000; border: 2px solid #0f0; border-radius: 4px; box-shadow: 0 0 10px #0f0; }
-.escort { position: absolute; top: 12px; font-size: 16px; width: 28px; height: 48px; background: #000; border: 1px solid #0f0; text-align: center; line-height: 48px; }
-#escort-left { left: -35px; }
-#escort-right { right: -35px; }
+const moveLeft = () => { if(game.pos > 20) { game.pos -= 15; updatePos(); } };
+const moveRight = () => { if(game.pos < 80) { game.pos += 15; updatePos(); } };
+const updatePos = () => document.getElementById('player-car').style.left = game.pos + "%";
 
-.enemy { position: absolute; width: 35px; height: 60px; background: #f00; border: 1px solid #fff; border-radius: 4px; box-shadow: 0 0 15px #f00; z-index: 55; }
+document.getElementById('btn-left').onclick = (e) => { e.preventDefault(); moveLeft(); };
+document.getElementById('btn-right').onclick = (e) => { e.preventDefault(); moveRight(); };
 
-#main-menu { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.95); display: flex; flex-direction: column; 
-    align-items: center; justify-content: center; z-index: 100; text-align: center;
+document.addEventListener('keydown', (e) => {
+    if(e.key === "ArrowLeft") moveLeft();
+    if(e.key === "ArrowRight") moveRight();
+});
+
+function buyEscort(lv) {
+    let p = lv === 1 ? 500 : 1500;
+    if (game.cash >= p && game.escort === lv - 1) {
+        game.cash -= p; game.escort = lv;
+        localStorage.setItem('fcm_cash', game.cash);
+        localStorage.setItem('fcm_escort', game.escort);
+        updateUI();
+    }
 }
-
-.shop { display: flex; flex-direction: column; gap: 10px; width: 80%; margin: 20px 0; }
-.shop button { background: #000; color: #0f0; border: 1px solid #0f0; padding: 12px; font-size: 12px; cursor: pointer; }
-#start-btn { background: #0f0; color: #000; padding: 15px 40px; font-weight: bold; font-size: 20px; border: none; cursor: pointer; }
-.hidden { display: none !important; }
