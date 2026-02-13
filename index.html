@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ForkCortegeMaster</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div class="header">
+            <div class="stat">💵 <span id="cash">0</span>$</div>
+            <div class="stat">🏆 BEST: <span id="highscore">0</span></div>
+        </div>
+
+        <div id="road">
+            <div id="player-car">
+                <div class="limo"></div>
+                <div id="escort-left" class="escort hidden">🚔</div>
+                <div id="escort-right" class="escort hidden">🚔</div>
+            </div>
+        </div>
+
+        <div class="controls-area">
+            <button id="btn-left" class="control-btn">◀</button>
+            <button id="btn-right" class="control-btn">▶</button>
+        </div>
+
+        <div id="main-menu">
+            <h1 id="menu-title">FORK CORTEGE MASTER</h1>
+            <div class="menu-stats">
+                CASH: <span id="menu-cash">0</span>$ | BEST: <span id="menu-record">0</span>
+            </div>
+            
+            <div class="shop">
+                <button onclick="buyEscort(1)" id="btn-esc-1">BUY LEFT ESCORT (500$)</button>
+                <button onclick="buyEscort(2)" id="btn-esc-2">BUY RIGHT ESCORT (1500$)</button>
+            </div>
+
+            <button id="start-btn" onclick="startGame()">START MISSION</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
